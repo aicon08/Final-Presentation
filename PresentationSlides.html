@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Converting Data into Long Form for Repeated Measures ANOVA</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Aira Contreras" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Converting Data into Long Form for Repeated Measures ANOVA
+## using Reshape2 and MOTE
+### Aira Contreras
+### MAY-06-2019
+
+---
+
+
+# Introduction
+--
+
+### Repeated Measures ANOVA
+
+--
+
+- Analysis of Variance for related groups
+
+--
+
+- Data will often have multiple measures for 1 participant across different timepoints
+
+--
+
+### Data Formats Possible
+
+--
+
+- Wide Format --&gt; Each indiviudal subject is contained per row, with the variable measures displayed in individual columns
+
+--
+
+- Long Format --&gt; Each individual measure is contained per row, with the same subject appearing in multiple rows
+
+---
+
+background-image: url(https://i.stack.imgur.com/WmasX.png)
+
+class: center, bottom
+
+# Wide Data Format into Long Data Format
+---
+
+
+# "Shaping" Data - 1
+
+--
+
+### Packages that help reformatting 
+
+--
+
+Reshape2 package helps users with the transformation of data from either the long format to the wide format or the wide format to the long format.
+
+1. reshape(dataframe, dependent variable names, independent variable name, variable in long format differentiates multiple records from the same group, wide format or long format)
+
+
+
+```r
+wide &lt;- reshape(Indometh, v.names = "conc", idvar = "Subject",
+                timevar = "time", direction = "wide")
+
+wide
+```
+
+```
+##    Subject conc.0.25 conc.0.5 conc.0.75 conc.1 conc.1.25 conc.2 conc.3
+## 1        1      1.50     0.94      0.78   0.48      0.37   0.19   0.12
+## 12       2      2.03     1.63      0.71   0.70      0.64   0.36   0.32
+## 23       3      2.72     1.49      1.16   0.80      0.80   0.39   0.22
+## 34       4      1.85     1.39      1.02   0.89      0.59   0.40   0.16
+## 45       5      2.05     1.04      0.81   0.39      0.30   0.23   0.13
+## 56       6      2.31     1.44      1.03   0.84      0.64   0.42   0.24
+##    conc.4 conc.5 conc.6 conc.8
+## 1    0.11   0.08   0.07   0.05
+## 12   0.20   0.25   0.12   0.08
+## 23   0.12   0.11   0.08   0.08
+## 34   0.11   0.10   0.07   0.07
+## 45   0.11   0.08   0.10   0.06
+## 56   0.17   0.13   0.10   0.09
+```
+
+---
+
+# "Shaping" Data - 2
+
+--
+
+### Packages that help reformatting 
+
+--
+2. reshape(dataframe, dependent variable names, independent variable name, variable in long format differentiates multiple records from the same group, wide format or long format)
+
+
+```r
+state.x77 &lt;- as.data.frame(state.x77)
+long &lt;- reshape(state.x77, idvar = "state", ids = row.names(state.x77),
+                times = names(state.x77), timevar = "Characteristic",
+                varying = list(names(state.x77)), direction = "long")
+
+long[,-1]
+```
+
+```
+##                           Population          state
+## Alabama.Population           3615.00        Alabama
+## Alaska.Population             365.00         Alaska
+## Arizona.Population           2212.00        Arizona
+## Arkansas.Population          2110.00       Arkansas
+## California.Population       21198.00     California
+## Colorado.Population          2541.00       Colorado
+## Connecticut.Population       3100.00    Connecticut
+## Delaware.Population           579.00       Delaware
+## Florida.Population           8277.00        Florida
+## Georgia.Population           4931.00        Georgia
+## Hawaii.Population             868.00         Hawaii
+## Idaho.Population              813.00          Idaho
+## Illinois.Population         11197.00       Illinois
+## Indiana.Population           5313.00        Indiana
+## Iowa.Population              2861.00           Iowa
+## Kansas.Population            2280.00         Kansas
+## Kentucky.Population          3387.00       Kentucky
+## Louisiana.Population         3806.00      Louisiana
+## Maine.Population             1058.00          Maine
+## Maryland.Population          4122.00       Maryland
+## Massachusetts.Population     5814.00  Massachusetts
+## Michigan.Population          9111.00       Michigan
+## Minnesota.Population         3921.00      Minnesota
+## Mississippi.Population       2341.00    Mississippi
+## Missouri.Population          4767.00       Missouri
+## Montana.Population            746.00        Montana
+## Nebraska.Population          1544.00       Nebraska
+## Nevada.Population             590.00         Nevada
+## New Hampshire.Population      812.00  New Hampshire
+## New Jersey.Population        7333.00     New Jersey
+## New Mexico.Population        1144.00     New Mexico
+## New York.Population         18076.00       New York
+## North Carolina.Population    5441.00 North Carolina
+## North Dakota.Population       637.00   North Dakota
+## Ohio.Population             10735.00           Ohio
+## Oklahoma.Population          2715.00       Oklahoma
+## Oregon.Population            2284.00         Oregon
+## Pennsylvania.Population     11860.00   Pennsylvania
+## Rhode Island.Population       931.00   Rhode Island
+## South Carolina.Population    2816.00 South Carolina
+## South Dakota.Population       681.00   South Dakota
+## Tennessee.Population         4173.00      Tennessee
+## Texas.Population            12237.00          Texas
+## Utah.Population              1203.00           Utah
+## Vermont.Population            472.00        Vermont
+## Virginia.Population          4981.00       Virginia
+## Washington.Population        3559.00     Washington
+## West Virginia.Population     1799.00  West Virginia
+## Wisconsin.Population         4589.00      Wisconsin
+## Wyoming.Population            376.00        Wyoming
+## Alabama.Income               3624.00        Alabama
+## Alaska.Income                6315.00         Alaska
+## Arizona.Income               4530.00        Arizona
+## Arkansas.Income              3378.00       Arkansas
+## California.Income            5114.00     California
+## Colorado.Income              4884.00       Colorado
+## Connecticut.Income           5348.00    Connecticut
+## Delaware.Income              4809.00       Delaware
+## Florida.Income               4815.00        Florida
+## Georgia.Income               4091.00        Georgia
+## Hawaii.Income                4963.00         Hawaii
+## Idaho.Income                 4119.00          Idaho
+## Illinois.Income              5107.00       Illinois
+## Indiana.Income               4458.00        Indiana
+## Iowa.Income                  4628.00           Iowa
+## Kansas.Income                4669.00         Kansas
+## Kentucky.Income              3712.00       Kentucky
+## Louisiana.Income             3545.00      Louisiana
+## Maine.Income                 3694.00          Maine
+## Maryland.Income              5299.00       Maryland
+## Massachusetts.Income         4755.00  Massachusetts
+## Michigan.Income              4751.00       Michigan
+## Minnesota.Income             4675.00      Minnesota
+## Mississippi.Income           3098.00    Mississippi
+## Missouri.Income              4254.00       Missouri
+## Montana.Income               4347.00        Montana
+## Nebraska.Income              4508.00       Nebraska
+## Nevada.Income                5149.00         Nevada
+## New Hampshire.Income         4281.00  New Hampshire
+## New Jersey.Income            5237.00     New Jersey
+## New Mexico.Income            3601.00     New Mexico
+## New York.Income              4903.00       New York
+## North Carolina.Income        3875.00 North Carolina
+## North Dakota.Income          5087.00   North Dakota
+## Ohio.Income                  4561.00           Ohio
+## Oklahoma.Income              3983.00       Oklahoma
+## Oregon.Income                4660.00         Oregon
+## Pennsylvania.Income          4449.00   Pennsylvania
+## Rhode Island.Income          4558.00   Rhode Island
+## South Carolina.Income        3635.00 South Carolina
+## South Dakota.Income          4167.00   South Dakota
+## Tennessee.Income             3821.00      Tennessee
+## Texas.Income                 4188.00          Texas
+## Utah.Income                  4022.00           Utah
+## Vermont.Income               3907.00        Vermont
+## Virginia.Income              4701.00       Virginia
+## Washington.Income            4864.00     Washington
+## West Virginia.Income         3617.00  West Virginia
+## Wisconsin.Income             4468.00      Wisconsin
+## Wyoming.Income               4566.00        Wyoming
+## Alabama.Illiteracy              2.10        Alabama
+## Alaska.Illiteracy               1.50         Alaska
+## Arizona.Illiteracy              1.80        Arizona
+## Arkansas.Illiteracy             1.90       Arkansas
+## California.Illiteracy           1.10     California
+## Colorado.Illiteracy             0.70       Colorado
+## Connecticut.Illiteracy          1.10    Connecticut
+## Delaware.Illiteracy             0.90       Delaware
+## Florida.Illiteracy              1.30        Florida
+## Georgia.Illiteracy              2.00        Georgia
+## Hawaii.Illiteracy               1.90         Hawaii
+## Idaho.Illiteracy                0.60          Idaho
+## Illinois.Illiteracy             0.90       Illinois
+## Indiana.Illiteracy              0.70        Indiana
+## Iowa.Illiteracy                 0.50           Iowa
+## Kansas.Illiteracy               0.60         Kansas
+## Kentucky.Illiteracy             1.60       Kentucky
+## Louisiana.Illiteracy            2.80      Louisiana
+## Maine.Illiteracy                0.70          Maine
+## Maryland.Illiteracy             0.90       Maryland
+## Massachusetts.Illiteracy        1.10  Massachusetts
+## Michigan.Illiteracy             0.90       Michigan
+## Minnesota.Illiteracy            0.60      Minnesota
+## Mississippi.Illiteracy          2.40    Mississippi
+## Missouri.Illiteracy             0.80       Missouri
+## Montana.Illiteracy              0.60        Montana
+## Nebraska.Illiteracy             0.60       Nebraska
+## Nevada.Illiteracy               0.50         Nevada
+## New Hampshire.Illiteracy        0.70  New Hampshire
+## New Jersey.Illiteracy           1.10     New Jersey
+## New Mexico.Illiteracy           2.20     New Mexico
+## New York.Illiteracy             1.40       New York
+## North Carolina.Illiteracy       1.80 North Carolina
+## North Dakota.Illiteracy         0.80   North Dakota
+## Ohio.Illiteracy                 0.80           Ohio
+## Oklahoma.Illiteracy             1.10       Oklahoma
+## Oregon.Illiteracy               0.60         Oregon
+## Pennsylvania.Illiteracy         1.00   Pennsylvania
+## Rhode Island.Illiteracy         1.30   Rhode Island
+## South Carolina.Illiteracy       2.30 South Carolina
+## South Dakota.Illiteracy         0.50   South Dakota
+## Tennessee.Illiteracy            1.70      Tennessee
+## Texas.Illiteracy                2.20          Texas
+## Utah.Illiteracy                 0.60           Utah
+## Vermont.Illiteracy              0.60        Vermont
+## Virginia.Illiteracy             1.40       Virginia
+## Washington.Illiteracy           0.60     Washington
+## West Virginia.Illiteracy        1.40  West Virginia
+## Wisconsin.Illiteracy            0.70      Wisconsin
+## Wyoming.Illiteracy              0.60        Wyoming
+## Alabama.Life Exp               69.05        Alabama
+## Alaska.Life Exp                69.31         Alaska
+## Arizona.Life Exp               70.55        Arizona
+## Arkansas.Life Exp              70.66       Arkansas
+## California.Life Exp            71.71     California
+## Colorado.Life Exp              72.06       Colorado
+## Connecticut.Life Exp           72.48    Connecticut
+## Delaware.Life Exp              70.06       Delaware
+## Florida.Life Exp               70.66        Florida
+## Georgia.Life Exp               68.54        Georgia
+## Hawaii.Life Exp                73.60         Hawaii
+## Idaho.Life Exp                 71.87          Idaho
+## Illinois.Life Exp              70.14       Illinois
+## Indiana.Life Exp               70.88        Indiana
+## Iowa.Life Exp                  72.56           Iowa
+## Kansas.Life Exp                72.58         Kansas
+## Kentucky.Life Exp              70.10       Kentucky
+## Louisiana.Life Exp             68.76      Louisiana
+## Maine.Life Exp                 70.39          Maine
+## Maryland.Life Exp              70.22       Maryland
+## Massachusetts.Life Exp         71.83  Massachusetts
+## Michigan.Life Exp              70.63       Michigan
+## Minnesota.Life Exp             72.96      Minnesota
+## Mississippi.Life Exp           68.09    Mississippi
+## Missouri.Life Exp              70.69       Missouri
+## Montana.Life Exp               70.56        Montana
+## Nebraska.Life Exp              72.60       Nebraska
+## Nevada.Life Exp                69.03         Nevada
+## New Hampshire.Life Exp         71.23  New Hampshire
+## New Jersey.Life Exp            70.93     New Jersey
+## New Mexico.Life Exp            70.32     New Mexico
+## New York.Life Exp              70.55       New York
+## North Carolina.Life Exp        69.21 North Carolina
+## North Dakota.Life Exp          72.78   North Dakota
+## Ohio.Life Exp                  70.82           Ohio
+## Oklahoma.Life Exp              71.42       Oklahoma
+## Oregon.Life Exp                72.13         Oregon
+## Pennsylvania.Life Exp          70.43   Pennsylvania
+## Rhode Island.Life Exp          71.90   Rhode Island
+## South Carolina.Life Exp        67.96 South Carolina
+## South Dakota.Life Exp          72.08   South Dakota
+## Tennessee.Life Exp             70.11      Tennessee
+## Texas.Life Exp                 70.90          Texas
+## Utah.Life Exp                  72.90           Utah
+## Vermont.Life Exp               71.64        Vermont
+## Virginia.Life Exp              70.08       Virginia
+## Washington.Life Exp            71.72     Washington
+## West Virginia.Life Exp         69.48  West Virginia
+## Wisconsin.Life Exp             72.48      Wisconsin
+## Wyoming.Life Exp               70.29        Wyoming
+## Alabama.Murder                 15.10        Alabama
+## Alaska.Murder                  11.30         Alaska
+## Arizona.Murder                  7.80        Arizona
+## Arkansas.Murder                10.10       Arkansas
+## California.Murder              10.30     California
+## Colorado.Murder                 6.80       Colorado
+## Connecticut.Murder              3.10    Connecticut
+## Delaware.Murder                 6.20       Delaware
+## Florida.Murder                 10.70        Florida
+## Georgia.Murder                 13.90        Georgia
+## Hawaii.Murder                   6.20         Hawaii
+## Idaho.Murder                    5.30          Idaho
+## Illinois.Murder                10.30       Illinois
+## Indiana.Murder                  7.10        Indiana
+## Iowa.Murder                     2.30           Iowa
+## Kansas.Murder                   4.50         Kansas
+## Kentucky.Murder                10.60       Kentucky
+## Louisiana.Murder               13.20      Louisiana
+## Maine.Murder                    2.70          Maine
+## Maryland.Murder                 8.50       Maryland
+## Massachusetts.Murder            3.30  Massachusetts
+## Michigan.Murder                11.10       Michigan
+## Minnesota.Murder                2.30      Minnesota
+## Mississippi.Murder             12.50    Mississippi
+## Missouri.Murder                 9.30       Missouri
+## Montana.Murder                  5.00        Montana
+## Nebraska.Murder                 2.90       Nebraska
+## Nevada.Murder                  11.50         Nevada
+## New Hampshire.Murder            3.30  New Hampshire
+## New Jersey.Murder               5.20     New Jersey
+## New Mexico.Murder               9.70     New Mexico
+## New York.Murder                10.90       New York
+## North Carolina.Murder          11.10 North Carolina
+## North Dakota.Murder             1.40   North Dakota
+## Ohio.Murder                     7.40           Ohio
+## Oklahoma.Murder                 6.40       Oklahoma
+## Oregon.Murder                   4.20         Oregon
+## Pennsylvania.Murder             6.10   Pennsylvania
+## Rhode Island.Murder             2.40   Rhode Island
+## South Carolina.Murder          11.60 South Carolina
+## South Dakota.Murder             1.70   South Dakota
+## Tennessee.Murder               11.00      Tennessee
+## Texas.Murder                   12.20          Texas
+## Utah.Murder                     4.50           Utah
+## Vermont.Murder                  5.50        Vermont
+## Virginia.Murder                 9.50       Virginia
+## Washington.Murder               4.30     Washington
+## West Virginia.Murder            6.70  West Virginia
+## Wisconsin.Murder                3.00      Wisconsin
+## Wyoming.Murder                  6.90        Wyoming
+## Alabama.HS Grad                41.30        Alabama
+## Alaska.HS Grad                 66.70         Alaska
+## Arizona.HS Grad                58.10        Arizona
+## Arkansas.HS Grad               39.90       Arkansas
+## California.HS Grad             62.60     California
+## Colorado.HS Grad               63.90       Colorado
+## Connecticut.HS Grad            56.00    Connecticut
+## Delaware.HS Grad               54.60       Delaware
+## Florida.HS Grad                52.60        Florida
+## Georgia.HS Grad                40.60        Georgia
+## Hawaii.HS Grad                 61.90         Hawaii
+## Idaho.HS Grad                  59.50          Idaho
+## Illinois.HS Grad               52.60       Illinois
+## Indiana.HS Grad                52.90        Indiana
+## Iowa.HS Grad                   59.00           Iowa
+## Kansas.HS Grad                 59.90         Kansas
+## Kentucky.HS Grad               38.50       Kentucky
+## Louisiana.HS Grad              42.20      Louisiana
+## Maine.HS Grad                  54.70          Maine
+## Maryland.HS Grad               52.30       Maryland
+## Massachusetts.HS Grad          58.50  Massachusetts
+## Michigan.HS Grad               52.80       Michigan
+## Minnesota.HS Grad              57.60      Minnesota
+## Mississippi.HS Grad            41.00    Mississippi
+## Missouri.HS Grad               48.80       Missouri
+## Montana.HS Grad                59.20        Montana
+## Nebraska.HS Grad               59.30       Nebraska
+## Nevada.HS Grad                 65.20         Nevada
+## New Hampshire.HS Grad          57.60  New Hampshire
+## New Jersey.HS Grad             52.50     New Jersey
+## New Mexico.HS Grad             55.20     New Mexico
+## New York.HS Grad               52.70       New York
+## North Carolina.HS Grad         38.50 North Carolina
+## North Dakota.HS Grad           50.30   North Dakota
+## Ohio.HS Grad                   53.20           Ohio
+## Oklahoma.HS Grad               51.60       Oklahoma
+## Oregon.HS Grad                 60.00         Oregon
+## Pennsylvania.HS Grad           50.20   Pennsylvania
+## Rhode Island.HS Grad           46.40   Rhode Island
+## South Carolina.HS Grad         37.80 South Carolina
+## South Dakota.HS Grad           53.30   South Dakota
+## Tennessee.HS Grad              41.80      Tennessee
+## Texas.HS Grad                  47.40          Texas
+## Utah.HS Grad                   67.30           Utah
+## Vermont.HS Grad                57.10        Vermont
+## Virginia.HS Grad               47.80       Virginia
+## Washington.HS Grad             63.50     Washington
+## West Virginia.HS Grad          41.60  West Virginia
+## Wisconsin.HS Grad              54.50      Wisconsin
+## Wyoming.HS Grad                62.90        Wyoming
+## Alabama.Frost                  20.00        Alabama
+## Alaska.Frost                  152.00         Alaska
+## Arizona.Frost                  15.00        Arizona
+## Arkansas.Frost                 65.00       Arkansas
+## California.Frost               20.00     California
+## Colorado.Frost                166.00       Colorado
+## Connecticut.Frost             139.00    Connecticut
+## Delaware.Frost                103.00       Delaware
+## Florida.Frost                  11.00        Florida
+## Georgia.Frost                  60.00        Georgia
+## Hawaii.Frost                    0.00         Hawaii
+## Idaho.Frost                   126.00          Idaho
+## Illinois.Frost                127.00       Illinois
+## Indiana.Frost                 122.00        Indiana
+## Iowa.Frost                    140.00           Iowa
+## Kansas.Frost                  114.00         Kansas
+## Kentucky.Frost                 95.00       Kentucky
+## Louisiana.Frost                12.00      Louisiana
+## Maine.Frost                   161.00          Maine
+## Maryland.Frost                101.00       Maryland
+## Massachusetts.Frost           103.00  Massachusetts
+## Michigan.Frost                125.00       Michigan
+## Minnesota.Frost               160.00      Minnesota
+## Mississippi.Frost              50.00    Mississippi
+## Missouri.Frost                108.00       Missouri
+## Montana.Frost                 155.00        Montana
+## Nebraska.Frost                139.00       Nebraska
+## Nevada.Frost                  188.00         Nevada
+## New Hampshire.Frost           174.00  New Hampshire
+## New Jersey.Frost              115.00     New Jersey
+## New Mexico.Frost              120.00     New Mexico
+## New York.Frost                 82.00       New York
+## North Carolina.Frost           80.00 North Carolina
+## North Dakota.Frost            186.00   North Dakota
+## Ohio.Frost                    124.00           Ohio
+## Oklahoma.Frost                 82.00       Oklahoma
+## Oregon.Frost                   44.00         Oregon
+## Pennsylvania.Frost            126.00   Pennsylvania
+## Rhode Island.Frost            127.00   Rhode Island
+## South Carolina.Frost           65.00 South Carolina
+## South Dakota.Frost            172.00   South Dakota
+## Tennessee.Frost                70.00      Tennessee
+## Texas.Frost                    35.00          Texas
+## Utah.Frost                    137.00           Utah
+## Vermont.Frost                 168.00        Vermont
+## Virginia.Frost                 85.00       Virginia
+## Washington.Frost               32.00     Washington
+## West Virginia.Frost           100.00  West Virginia
+## Wisconsin.Frost               149.00      Wisconsin
+## Wyoming.Frost                 173.00        Wyoming
+## Alabama.Area                50708.00        Alabama
+## Alaska.Area                566432.00         Alaska
+## Arizona.Area               113417.00        Arizona
+## Arkansas.Area               51945.00       Arkansas
+## California.Area            156361.00     California
+## Colorado.Area              103766.00       Colorado
+## Connecticut.Area             4862.00    Connecticut
+## Delaware.Area                1982.00       Delaware
+## Florida.Area                54090.00        Florida
+## Georgia.Area                58073.00        Georgia
+## Hawaii.Area                  6425.00         Hawaii
+## Idaho.Area                  82677.00          Idaho
+## Illinois.Area               55748.00       Illinois
+## Indiana.Area                36097.00        Indiana
+## Iowa.Area                   55941.00           Iowa
+## Kansas.Area                 81787.00         Kansas
+## Kentucky.Area               39650.00       Kentucky
+## Louisiana.Area              44930.00      Louisiana
+## Maine.Area                  30920.00          Maine
+## Maryland.Area                9891.00       Maryland
+## Massachusetts.Area           7826.00  Massachusetts
+## Michigan.Area               56817.00       Michigan
+## Minnesota.Area              79289.00      Minnesota
+## Mississippi.Area            47296.00    Mississippi
+## Missouri.Area               68995.00       Missouri
+## Montana.Area               145587.00        Montana
+## Nebraska.Area               76483.00       Nebraska
+## Nevada.Area                109889.00         Nevada
+## New Hampshire.Area           9027.00  New Hampshire
+## New Jersey.Area              7521.00     New Jersey
+## New Mexico.Area            121412.00     New Mexico
+## New York.Area               47831.00       New York
+## North Carolina.Area         48798.00 North Carolina
+## North Dakota.Area           69273.00   North Dakota
+## Ohio.Area                   40975.00           Ohio
+## Oklahoma.Area               68782.00       Oklahoma
+## Oregon.Area                 96184.00         Oregon
+## Pennsylvania.Area           44966.00   Pennsylvania
+## Rhode Island.Area            1049.00   Rhode Island
+## South Carolina.Area         30225.00 South Carolina
+## South Dakota.Area           75955.00   South Dakota
+## Tennessee.Area              41328.00      Tennessee
+## Texas.Area                 262134.00          Texas
+## Utah.Area                   82096.00           Utah
+## Vermont.Area                 9267.00        Vermont
+## Virginia.Area               39780.00       Virginia
+## Washington.Area             66570.00     Washington
+## West Virginia.Area          24070.00  West Virginia
+## Wisconsin.Area              54464.00      Wisconsin
+## Wyoming.Area                97203.00        Wyoming
+```
+---
+
+# "Shaping" Data - 3
+
+--
+
+### Packages that help reformatting 
+
+--
+3. melt(dataframe, Subject Name Code Column, Variable Column Names in list form)
+
+
+```r
+library(reshape2)
+SubjectID&lt;-1:50
+df&lt;-data.frame(SubjectID,state.x77)
+example&lt;-melt(df,id="SubjectID")
+example
+```
+
+```
+##     SubjectID   variable     value
+## 1           1 Population   3615.00
+## 2           2 Population    365.00
+## 3           3 Population   2212.00
+## 4           4 Population   2110.00
+## 5           5 Population  21198.00
+## 6           6 Population   2541.00
+## 7           7 Population   3100.00
+## 8           8 Population    579.00
+## 9           9 Population   8277.00
+## 10         10 Population   4931.00
+## 11         11 Population    868.00
+## 12         12 Population    813.00
+## 13         13 Population  11197.00
+## 14         14 Population   5313.00
+## 15         15 Population   2861.00
+## 16         16 Population   2280.00
+## 17         17 Population   3387.00
+## 18         18 Population   3806.00
+## 19         19 Population   1058.00
+## 20         20 Population   4122.00
+## 21         21 Population   5814.00
+## 22         22 Population   9111.00
+## 23         23 Population   3921.00
+## 24         24 Population   2341.00
+## 25         25 Population   4767.00
+## 26         26 Population    746.00
+## 27         27 Population   1544.00
+## 28         28 Population    590.00
+## 29         29 Population    812.00
+## 30         30 Population   7333.00
+## 31         31 Population   1144.00
+## 32         32 Population  18076.00
+## 33         33 Population   5441.00
+## 34         34 Population    637.00
+## 35         35 Population  10735.00
+## 36         36 Population   2715.00
+## 37         37 Population   2284.00
+## 38         38 Population  11860.00
+## 39         39 Population    931.00
+## 40         40 Population   2816.00
+## 41         41 Population    681.00
+## 42         42 Population   4173.00
+## 43         43 Population  12237.00
+## 44         44 Population   1203.00
+## 45         45 Population    472.00
+## 46         46 Population   4981.00
+## 47         47 Population   3559.00
+## 48         48 Population   1799.00
+## 49         49 Population   4589.00
+## 50         50 Population    376.00
+## 51          1     Income   3624.00
+## 52          2     Income   6315.00
+## 53          3     Income   4530.00
+## 54          4     Income   3378.00
+## 55          5     Income   5114.00
+## 56          6     Income   4884.00
+## 57          7     Income   5348.00
+## 58          8     Income   4809.00
+## 59          9     Income   4815.00
+## 60         10     Income   4091.00
+## 61         11     Income   4963.00
+## 62         12     Income   4119.00
+## 63         13     Income   5107.00
+## 64         14     Income   4458.00
+## 65         15     Income   4628.00
+## 66         16     Income   4669.00
+## 67         17     Income   3712.00
+## 68         18     Income   3545.00
+## 69         19     Income   3694.00
+## 70         20     Income   5299.00
+## 71         21     Income   4755.00
+## 72         22     Income   4751.00
+## 73         23     Income   4675.00
+## 74         24     Income   3098.00
+## 75         25     Income   4254.00
+## 76         26     Income   4347.00
+## 77         27     Income   4508.00
+## 78         28     Income   5149.00
+## 79         29     Income   4281.00
+## 80         30     Income   5237.00
+## 81         31     Income   3601.00
+## 82         32     Income   4903.00
+## 83         33     Income   3875.00
+## 84         34     Income   5087.00
+## 85         35     Income   4561.00
+## 86         36     Income   3983.00
+## 87         37     Income   4660.00
+## 88         38     Income   4449.00
+## 89         39     Income   4558.00
+## 90         40     Income   3635.00
+## 91         41     Income   4167.00
+## 92         42     Income   3821.00
+## 93         43     Income   4188.00
+## 94         44     Income   4022.00
+## 95         45     Income   3907.00
+## 96         46     Income   4701.00
+## 97         47     Income   4864.00
+## 98         48     Income   3617.00
+## 99         49     Income   4468.00
+## 100        50     Income   4566.00
+## 101         1 Illiteracy      2.10
+## 102         2 Illiteracy      1.50
+## 103         3 Illiteracy      1.80
+## 104         4 Illiteracy      1.90
+## 105         5 Illiteracy      1.10
+## 106         6 Illiteracy      0.70
+## 107         7 Illiteracy      1.10
+## 108         8 Illiteracy      0.90
+## 109         9 Illiteracy      1.30
+## 110        10 Illiteracy      2.00
+## 111        11 Illiteracy      1.90
+## 112        12 Illiteracy      0.60
+## 113        13 Illiteracy      0.90
+## 114        14 Illiteracy      0.70
+## 115        15 Illiteracy      0.50
+## 116        16 Illiteracy      0.60
+## 117        17 Illiteracy      1.60
+## 118        18 Illiteracy      2.80
+## 119        19 Illiteracy      0.70
+## 120        20 Illiteracy      0.90
+## 121        21 Illiteracy      1.10
+## 122        22 Illiteracy      0.90
+## 123        23 Illiteracy      0.60
+## 124        24 Illiteracy      2.40
+## 125        25 Illiteracy      0.80
+## 126        26 Illiteracy      0.60
+## 127        27 Illiteracy      0.60
+## 128        28 Illiteracy      0.50
+## 129        29 Illiteracy      0.70
+## 130        30 Illiteracy      1.10
+## 131        31 Illiteracy      2.20
+## 132        32 Illiteracy      1.40
+## 133        33 Illiteracy      1.80
+## 134        34 Illiteracy      0.80
+## 135        35 Illiteracy      0.80
+## 136        36 Illiteracy      1.10
+## 137        37 Illiteracy      0.60
+## 138        38 Illiteracy      1.00
+## 139        39 Illiteracy      1.30
+## 140        40 Illiteracy      2.30
+## 141        41 Illiteracy      0.50
+## 142        42 Illiteracy      1.70
+## 143        43 Illiteracy      2.20
+## 144        44 Illiteracy      0.60
+## 145        45 Illiteracy      0.60
+## 146        46 Illiteracy      1.40
+## 147        47 Illiteracy      0.60
+## 148        48 Illiteracy      1.40
+## 149        49 Illiteracy      0.70
+## 150        50 Illiteracy      0.60
+## 151         1   Life.Exp     69.05
+## 152         2   Life.Exp     69.31
+## 153         3   Life.Exp     70.55
+## 154         4   Life.Exp     70.66
+## 155         5   Life.Exp     71.71
+## 156         6   Life.Exp     72.06
+## 157         7   Life.Exp     72.48
+## 158         8   Life.Exp     70.06
+## 159         9   Life.Exp     70.66
+## 160        10   Life.Exp     68.54
+## 161        11   Life.Exp     73.60
+## 162        12   Life.Exp     71.87
+## 163        13   Life.Exp     70.14
+## 164        14   Life.Exp     70.88
+## 165        15   Life.Exp     72.56
+## 166        16   Life.Exp     72.58
+## 167        17   Life.Exp     70.10
+## 168        18   Life.Exp     68.76
+## 169        19   Life.Exp     70.39
+## 170        20   Life.Exp     70.22
+## 171        21   Life.Exp     71.83
+## 172        22   Life.Exp     70.63
+## 173        23   Life.Exp     72.96
+## 174        24   Life.Exp     68.09
+## 175        25   Life.Exp     70.69
+## 176        26   Life.Exp     70.56
+## 177        27   Life.Exp     72.60
+## 178        28   Life.Exp     69.03
+## 179        29   Life.Exp     71.23
+## 180        30   Life.Exp     70.93
+## 181        31   Life.Exp     70.32
+## 182        32   Life.Exp     70.55
+## 183        33   Life.Exp     69.21
+## 184        34   Life.Exp     72.78
+## 185        35   Life.Exp     70.82
+## 186        36   Life.Exp     71.42
+## 187        37   Life.Exp     72.13
+## 188        38   Life.Exp     70.43
+## 189        39   Life.Exp     71.90
+## 190        40   Life.Exp     67.96
+## 191        41   Life.Exp     72.08
+## 192        42   Life.Exp     70.11
+## 193        43   Life.Exp     70.90
+## 194        44   Life.Exp     72.90
+## 195        45   Life.Exp     71.64
+## 196        46   Life.Exp     70.08
+## 197        47   Life.Exp     71.72
+## 198        48   Life.Exp     69.48
+## 199        49   Life.Exp     72.48
+## 200        50   Life.Exp     70.29
+## 201         1     Murder     15.10
+## 202         2     Murder     11.30
+## 203         3     Murder      7.80
+## 204         4     Murder     10.10
+## 205         5     Murder     10.30
+## 206         6     Murder      6.80
+## 207         7     Murder      3.10
+## 208         8     Murder      6.20
+## 209         9     Murder     10.70
+## 210        10     Murder     13.90
+## 211        11     Murder      6.20
+## 212        12     Murder      5.30
+## 213        13     Murder     10.30
+## 214        14     Murder      7.10
+## 215        15     Murder      2.30
+## 216        16     Murder      4.50
+## 217        17     Murder     10.60
+## 218        18     Murder     13.20
+## 219        19     Murder      2.70
+## 220        20     Murder      8.50
+## 221        21     Murder      3.30
+## 222        22     Murder     11.10
+## 223        23     Murder      2.30
+## 224        24     Murder     12.50
+## 225        25     Murder      9.30
+## 226        26     Murder      5.00
+## 227        27     Murder      2.90
+## 228        28     Murder     11.50
+## 229        29     Murder      3.30
+## 230        30     Murder      5.20
+## 231        31     Murder      9.70
+## 232        32     Murder     10.90
+## 233        33     Murder     11.10
+## 234        34     Murder      1.40
+## 235        35     Murder      7.40
+## 236        36     Murder      6.40
+## 237        37     Murder      4.20
+## 238        38     Murder      6.10
+## 239        39     Murder      2.40
+## 240        40     Murder     11.60
+## 241        41     Murder      1.70
+## 242        42     Murder     11.00
+## 243        43     Murder     12.20
+## 244        44     Murder      4.50
+## 245        45     Murder      5.50
+## 246        46     Murder      9.50
+## 247        47     Murder      4.30
+## 248        48     Murder      6.70
+## 249        49     Murder      3.00
+## 250        50     Murder      6.90
+## 251         1    HS.Grad     41.30
+## 252         2    HS.Grad     66.70
+## 253         3    HS.Grad     58.10
+## 254         4    HS.Grad     39.90
+## 255         5    HS.Grad     62.60
+## 256         6    HS.Grad     63.90
+## 257         7    HS.Grad     56.00
+## 258         8    HS.Grad     54.60
+## 259         9    HS.Grad     52.60
+## 260        10    HS.Grad     40.60
+## 261        11    HS.Grad     61.90
+## 262        12    HS.Grad     59.50
+## 263        13    HS.Grad     52.60
+## 264        14    HS.Grad     52.90
+## 265        15    HS.Grad     59.00
+## 266        16    HS.Grad     59.90
+## 267        17    HS.Grad     38.50
+## 268        18    HS.Grad     42.20
+## 269        19    HS.Grad     54.70
+## 270        20    HS.Grad     52.30
+## 271        21    HS.Grad     58.50
+## 272        22    HS.Grad     52.80
+## 273        23    HS.Grad     57.60
+## 274        24    HS.Grad     41.00
+## 275        25    HS.Grad     48.80
+## 276        26    HS.Grad     59.20
+## 277        27    HS.Grad     59.30
+## 278        28    HS.Grad     65.20
+## 279        29    HS.Grad     57.60
+## 280        30    HS.Grad     52.50
+## 281        31    HS.Grad     55.20
+## 282        32    HS.Grad     52.70
+## 283        33    HS.Grad     38.50
+## 284        34    HS.Grad     50.30
+## 285        35    HS.Grad     53.20
+## 286        36    HS.Grad     51.60
+## 287        37    HS.Grad     60.00
+## 288        38    HS.Grad     50.20
+## 289        39    HS.Grad     46.40
+## 290        40    HS.Grad     37.80
+## 291        41    HS.Grad     53.30
+## 292        42    HS.Grad     41.80
+## 293        43    HS.Grad     47.40
+## 294        44    HS.Grad     67.30
+## 295        45    HS.Grad     57.10
+## 296        46    HS.Grad     47.80
+## 297        47    HS.Grad     63.50
+## 298        48    HS.Grad     41.60
+## 299        49    HS.Grad     54.50
+## 300        50    HS.Grad     62.90
+## 301         1      Frost     20.00
+## 302         2      Frost    152.00
+## 303         3      Frost     15.00
+## 304         4      Frost     65.00
+## 305         5      Frost     20.00
+## 306         6      Frost    166.00
+## 307         7      Frost    139.00
+## 308         8      Frost    103.00
+## 309         9      Frost     11.00
+## 310        10      Frost     60.00
+## 311        11      Frost      0.00
+## 312        12      Frost    126.00
+## 313        13      Frost    127.00
+## 314        14      Frost    122.00
+## 315        15      Frost    140.00
+## 316        16      Frost    114.00
+## 317        17      Frost     95.00
+## 318        18      Frost     12.00
+## 319        19      Frost    161.00
+## 320        20      Frost    101.00
+## 321        21      Frost    103.00
+## 322        22      Frost    125.00
+## 323        23      Frost    160.00
+## 324        24      Frost     50.00
+## 325        25      Frost    108.00
+## 326        26      Frost    155.00
+## 327        27      Frost    139.00
+## 328        28      Frost    188.00
+## 329        29      Frost    174.00
+## 330        30      Frost    115.00
+## 331        31      Frost    120.00
+## 332        32      Frost     82.00
+## 333        33      Frost     80.00
+## 334        34      Frost    186.00
+## 335        35      Frost    124.00
+## 336        36      Frost     82.00
+## 337        37      Frost     44.00
+## 338        38      Frost    126.00
+## 339        39      Frost    127.00
+## 340        40      Frost     65.00
+## 341        41      Frost    172.00
+## 342        42      Frost     70.00
+## 343        43      Frost     35.00
+## 344        44      Frost    137.00
+## 345        45      Frost    168.00
+## 346        46      Frost     85.00
+## 347        47      Frost     32.00
+## 348        48      Frost    100.00
+## 349        49      Frost    149.00
+## 350        50      Frost    173.00
+## 351         1       Area  50708.00
+## 352         2       Area 566432.00
+## 353         3       Area 113417.00
+## 354         4       Area  51945.00
+## 355         5       Area 156361.00
+## 356         6       Area 103766.00
+## 357         7       Area   4862.00
+## 358         8       Area   1982.00
+## 359         9       Area  54090.00
+## 360        10       Area  58073.00
+## 361        11       Area   6425.00
+## 362        12       Area  82677.00
+## 363        13       Area  55748.00
+## 364        14       Area  36097.00
+## 365        15       Area  55941.00
+## 366        16       Area  81787.00
+## 367        17       Area  39650.00
+## 368        18       Area  44930.00
+## 369        19       Area  30920.00
+## 370        20       Area   9891.00
+## 371        21       Area   7826.00
+## 372        22       Area  56817.00
+## 373        23       Area  79289.00
+## 374        24       Area  47296.00
+## 375        25       Area  68995.00
+## 376        26       Area 145587.00
+## 377        27       Area  76483.00
+## 378        28       Area 109889.00
+## 379        29       Area   9027.00
+## 380        30       Area   7521.00
+## 381        31       Area 121412.00
+## 382        32       Area  47831.00
+## 383        33       Area  48798.00
+## 384        34       Area  69273.00
+## 385        35       Area  40975.00
+## 386        36       Area  68782.00
+## 387        37       Area  96184.00
+## 388        38       Area  44966.00
+## 389        39       Area   1049.00
+## 390        40       Area  30225.00
+## 391        41       Area  75955.00
+## 392        42       Area  41328.00
+## 393        43       Area 262134.00
+## 394        44       Area  82096.00
+## 395        45       Area   9267.00
+## 396        46       Area  39780.00
+## 397        47       Area  66570.00
+## 398        48       Area  24070.00
+## 399        49       Area  54464.00
+## 400        50       Area  97203.00
+```
+
+---
+class: inverse, middle, center
+
+# Using xaringan
+
+---
+
+# xaringan
+
+Provides an R Markdown output format `xaringan::moon_reader` as a wrapper for remark.js, and you can use it in the YAML metadata, e.g.
+
+```yaml
+---
+title: "A Cool Presentation"
+output:
+  xaringan::moon_reader:
+    yolo: true
+    nature:
+      autoplay: 30000
+---
+```
+
+See the help page `?xaringan::moon_reader` for all possible options that you can use.
+
+---
+
+# remark.js vs xaringan
+
+Some differences between using remark.js (left) and using **xaringan** (right):
+
+.pull-left[
+1. Start with a boilerplate HTML file;
+
+1. Plain Markdown;
+
+1. Write JavaScript to autoplay slides;
+
+1. Manually configure MathJax;
+
+1. Highlight code with `*`;
+
+1. Edit Markdown source and refresh browser to see updated slides;
+]
+
+.pull-right[
+1. Start with an R Markdown document;
+
+1. R Markdown (can embed R/other code chunks);
+
+1. Provide an option `autoplay`;
+
+1. MathJax just works;&lt;sup&gt;*&lt;/sup&gt;
+
+1. Highlight code with `{{}}`;
+
+1. The RStudio addin "Infinite Moon Reader" automatically refreshes slides on changes;
+]
+
+.footnote[[*] Not really. See next page.]
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

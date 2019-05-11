@@ -1,0 +1,170 @@
+---
+title: "Converting Data into Long Form for Repeated Measures ANOVA"
+subtitle: "using Reshape2 and MOTE"
+author: "Aira Contreras"
+date: "MAY-06-2019"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+# Introduction
+--
+
+### Repeated Measures ANOVA
+
+--
+
+- Analysis of Variance for related groups
+
+--
+
+- Data will often have multiple measures for 1 participant across different timepoints
+
+--
+
+### Data Formats Possible
+
+--
+
+- Wide Format --> Each indiviudal subject is contained per row, with the variable measures displayed in individual columns
+
+--
+
+- Long Format --> Each individual measure is contained per row, with the same subject appearing in multiple rows
+
+---
+
+background-image: url(https://i.stack.imgur.com/WmasX.png)
+
+class: center, bottom
+
+# Wide Data Format into Long Data Format
+---
+
+
+# "Shaping" Data - 1
+
+--
+
+### Packages that help reformatting 
+
+--
+
+Reshape2 package helps users with the transformation of data from either the long format to the wide format or the wide format to the long format.
+
+1. reshape(dataframe, dependent variable names, independent variable name, variable in long format differentiates multiple records from the same group, wide format or long format)
+
+
+```{r}
+
+wide <- reshape(Indometh, v.names = "conc", idvar = "Subject",
+                timevar = "time", direction = "wide")
+
+wide
+
+```
+
+---
+
+# "Shaping" Data - 2
+
+--
+
+### Packages that help reformatting 
+
+--
+2. reshape(dataframe, dependent variable names, independent variable name, variable in long format differentiates multiple records from the same group, wide format or long format)
+
+```{r}
+state.x77 <- as.data.frame(state.x77)
+long <- reshape(state.x77, idvar = "state", ids = row.names(state.x77),
+                times = names(state.x77), timevar = "Characteristic",
+                varying = list(names(state.x77)), direction = "long")
+
+long[,-1]
+```
+---
+
+# "Shaping" Data - 3
+
+--
+
+### Packages that help reformatting 
+
+--
+3. melt(dataframe, Subject Name Code Column, Variable Column Names in list form)
+
+```{r}
+library(reshape2)
+SubjectID<-1:50
+df<-data.frame(SubjectID,state.x77)
+example<-melt(df,id="SubjectID")
+example
+```
+
+---
+class: inverse, middle, center
+
+# Using xaringan
+
+---
+
+# xaringan
+
+Provides an R Markdown output format `xaringan::moon_reader` as a wrapper for remark.js, and you can use it in the YAML metadata, e.g.
+
+```yaml
+---
+title: "A Cool Presentation"
+output:
+  xaringan::moon_reader:
+    yolo: true
+    nature:
+      autoplay: 30000
+---
+```
+
+See the help page `?xaringan::moon_reader` for all possible options that you can use.
+
+---
+
+# remark.js vs xaringan
+
+Some differences between using remark.js (left) and using **xaringan** (right):
+
+.pull-left[
+1. Start with a boilerplate HTML file;
+
+1. Plain Markdown;
+
+1. Write JavaScript to autoplay slides;
+
+1. Manually configure MathJax;
+
+1. Highlight code with `*`;
+
+1. Edit Markdown source and refresh browser to see updated slides;
+]
+
+.pull-right[
+1. Start with an R Markdown document;
+
+1. R Markdown (can embed R/other code chunks);
+
+1. Provide an option `autoplay`;
+
+1. MathJax just works;<sup>*</sup>
+
+1. Highlight code with `{{}}`;
+
+1. The RStudio addin "Infinite Moon Reader" automatically refreshes slides on changes;
+]
+
+.footnote[[*] Not really. See next page.]
+
+---
