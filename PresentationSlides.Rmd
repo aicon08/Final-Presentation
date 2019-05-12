@@ -1,12 +1,13 @@
 ---
 title: "Converting Data into Long Form for Repeated Measures ANOVA"
-subtitle: "using Reshape2 and MOTE"
+subtitle: "using Reshape2 and Melt"
 author: "Aira Contreras"
 date: "MAY-06-2019"
 output:
   xaringan::moon_reader:
     lib_dir: libs
     nature:
+      theme: night
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
@@ -39,6 +40,35 @@ output:
 
 ---
 
+# Data Preparation is Key
+
+### Most classes teach data prep as part of a statisitcs course
+
+--
+
+Important Factors we are taught to review:
+
+--
+
+1. Kurtosis (Is it flat?!)
+
+--
+
+1. Skew (To the left now y'all!)
+
+--
+
+1. Missingness (where'd it go?)
+
+--
+
+1. Outliers (That number reads as what?!)
+
+--
+
+### We should add another: DATA FORMAT!
+---
+
 background-image: url(https://i.stack.imgur.com/WmasX.png)
 
 class: center, bottom
@@ -46,12 +76,49 @@ class: center, bottom
 # Wide Data Format into Long Data Format
 ---
 
+# Packages Available to Reshape Data
+
+
+
+.pull-left[
+
+Reshape2
+
+1. reshape()
+
+1. melt()
+
+1. reshapelong()
+
+1. reshapewide()
+
+]
+
+
+
+.pull-right[
+
+Reshape
+
+1. cast()
+
+1. reshape1()
+
+]
+
+
+Tools exists to ensure that we have the most flexibility to arrange and re-arrange our data seamlessly*
+
+
+
+.footnote[[*]- seamlessly is probably a BIT of a hyperbole. It takes some work.]
+---
 
 # "Shaping" Data - 1
 
 --
 
-### Packages that help reformatting 
+### Resphape 2--Data into Wide Format 
 
 --
 
@@ -75,7 +142,7 @@ wide
 
 --
 
-### Packages that help reformatting 
+### Reshape2-- Data into Long Format 
 
 --
 2. reshape(dataframe, dependent variable names, independent variable name, variable in long format differentiates multiple records from the same group, wide format or long format)
@@ -89,82 +156,68 @@ long <- reshape(state.x77, idvar = "state", ids = row.names(state.x77),
 long[,-1]
 ```
 ---
+background-size: contain 
 
-# "Shaping" Data - 3
+# "Shaping" Data - 3 pt 1
+
+--
+
+### Melt-- data into long format 
 
 --
 
-### Packages that help reformatting 
-
---
 3. melt(dataframe, Subject Name Code Column, Variable Column Names in list form)
 
-```{r}
+```{r} 
 library(reshape2)
+library(dplyr)
+```
+---
+# "Shaping" Data - 3 pt 2
+
+```{r}
 SubjectID<-1:50
 df<-data.frame(SubjectID,state.x77)
 example<-melt(df,id="SubjectID")
-example
+ex<-example%>%filter(SubjectID==1)
+ex
 ```
-
 ---
 class: inverse, middle, center
 
-# Using xaringan
+# Why Change Formats?
 
 ---
 
-# xaringan
+# Software Analysis
 
-Provides an R Markdown output format `xaringan::moon_reader` as a wrapper for remark.js, and you can use it in the YAML metadata, e.g.
+Packages like EZANOVA or even the summary_aov function in R require that the data be set up in certain ways prior to analyzing
 
-```yaml
----
-title: "A Cool Presentation"
-output:
-  xaringan::moon_reader:
-    yolo: true
-    nature:
-      autoplay: 30000
----
-```
-
-See the help page `?xaringan::moon_reader` for all possible options that you can use.
-
----
-
-# remark.js vs xaringan
-
-Some differences between using remark.js (left) and using **xaringan** (right):
 
 .pull-left[
-1. Start with a boilerplate HTML file;
+EZANOVA
+1. Requires Data to be in "Long" Format;
 
-1. Plain Markdown;
+1. Will still run on Wide Format but gives incorrect Results;
 
-1. Write JavaScript to autoplay slides;
+1. Does not give an input data error;
 
-1. Manually configure MathJax;
-
-1. Highlight code with `*`;
-
-1. Edit Markdown source and refresh browser to see updated slides;
 ]
 
 .pull-right[
-1. Start with an R Markdown document;
+Summary_AOV
+1. Requires Data to be in "Long" Format;
 
-1. R Markdown (can embed R/other code chunks);
+1. Will still run on Wide Format but gives incorrect Results;
 
-1. Provide an option `autoplay`;
-
-1. MathJax just works;<sup>*</sup>
-
-1. Highlight code with `{{}}`;
-
-1. The RStudio addin "Infinite Moon Reader" automatically refreshes slides on changes;
+1. Does not give an input data error;
 ]
 
-.footnote[[*] Not really. See next page.]
-
+.footnote[ Both require long format, which really is the standard between subjects format if you think about it.]
 ---
+
+class: center, top
+
+background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTV0BswSVTJNlUv4Wugt-nw1-YF8zDThdDYRqWyphBAaiIRRijM3bZT4DFw)
+
+# Questions?

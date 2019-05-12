@@ -12,7 +12,7 @@
 class: center, middle, inverse, title-slide
 
 # Converting Data into Long Form for Repeated Measures ANOVA
-## using Reshape2 and MOTE
+## using Reshape2 and Melt
 ### Aira Contreras
 ### MAY-06-2019
 
@@ -46,6 +46,35 @@ class: center, middle, inverse, title-slide
 
 ---
 
+# Data Preparation is Key
+
+### Most classes teach data prep as part of a statisitcs course
+
+--
+
+Important Factors we are taught to review:
+
+--
+
+1. Kurtosis (Is it flat?!)
+
+--
+
+1. Skew (To the left now y'all!)
+
+--
+
+1. Missingness (where'd it go?)
+
+--
+
+1. Outliers (That number reads as what?!)
+
+--
+
+### We should add another: DATA FORMAT!
+---
+
 background-image: url(https://i.stack.imgur.com/WmasX.png)
 
 class: center, bottom
@@ -53,12 +82,49 @@ class: center, bottom
 # Wide Data Format into Long Data Format
 ---
 
+# Packages Available to Reshape Data
+
+
+
+.pull-left[
+
+Reshape2
+
+1. reshape()
+
+1. melt()
+
+1. reshapelong()
+
+1. reshapewide()
+
+]
+
+
+
+.pull-right[
+
+Reshape
+
+1. cast()
+
+1. reshape1()
+
+]
+
+
+Tools exists to ensure that we have the most flexibility to arrange and re-arrange our data seamlessly*
+
+
+
+.footnote[[*]- seamlessly is probably a BIT of a hyperbole. It takes some work.]
+---
 
 # "Shaping" Data - 1
 
 --
 
-### Packages that help reformatting 
+### Resphape 2--Data into Wide Format 
 
 --
 
@@ -98,7 +164,7 @@ wide
 
 --
 
-### Packages that help reformatting 
+### Reshape2-- Data into Long Format 
 
 --
 2. reshape(dataframe, dependent variable names, independent variable name, variable in long format differentiates multiple records from the same group, wide format or long format)
@@ -517,494 +583,107 @@ long[,-1]
 ## Wyoming.Area                97203.00        Wyoming
 ```
 ---
+background-size: contain 
 
-# "Shaping" Data - 3
+# "Shaping" Data - 3 pt 1
+
+--
+
+### Melt-- data into long format 
 
 --
 
-### Packages that help reformatting 
-
---
 3. melt(dataframe, Subject Name Code Column, Variable Column Names in list form)
 
 
 ```r
 library(reshape2)
+library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+---
+# "Shaping" Data - 3 pt 2
+
+
+```r
 SubjectID&lt;-1:50
 df&lt;-data.frame(SubjectID,state.x77)
 example&lt;-melt(df,id="SubjectID")
-example
+ex&lt;-example%&gt;%filter(SubjectID==1)
+ex
 ```
 
 ```
-##     SubjectID   variable     value
-## 1           1 Population   3615.00
-## 2           2 Population    365.00
-## 3           3 Population   2212.00
-## 4           4 Population   2110.00
-## 5           5 Population  21198.00
-## 6           6 Population   2541.00
-## 7           7 Population   3100.00
-## 8           8 Population    579.00
-## 9           9 Population   8277.00
-## 10         10 Population   4931.00
-## 11         11 Population    868.00
-## 12         12 Population    813.00
-## 13         13 Population  11197.00
-## 14         14 Population   5313.00
-## 15         15 Population   2861.00
-## 16         16 Population   2280.00
-## 17         17 Population   3387.00
-## 18         18 Population   3806.00
-## 19         19 Population   1058.00
-## 20         20 Population   4122.00
-## 21         21 Population   5814.00
-## 22         22 Population   9111.00
-## 23         23 Population   3921.00
-## 24         24 Population   2341.00
-## 25         25 Population   4767.00
-## 26         26 Population    746.00
-## 27         27 Population   1544.00
-## 28         28 Population    590.00
-## 29         29 Population    812.00
-## 30         30 Population   7333.00
-## 31         31 Population   1144.00
-## 32         32 Population  18076.00
-## 33         33 Population   5441.00
-## 34         34 Population    637.00
-## 35         35 Population  10735.00
-## 36         36 Population   2715.00
-## 37         37 Population   2284.00
-## 38         38 Population  11860.00
-## 39         39 Population    931.00
-## 40         40 Population   2816.00
-## 41         41 Population    681.00
-## 42         42 Population   4173.00
-## 43         43 Population  12237.00
-## 44         44 Population   1203.00
-## 45         45 Population    472.00
-## 46         46 Population   4981.00
-## 47         47 Population   3559.00
-## 48         48 Population   1799.00
-## 49         49 Population   4589.00
-## 50         50 Population    376.00
-## 51          1     Income   3624.00
-## 52          2     Income   6315.00
-## 53          3     Income   4530.00
-## 54          4     Income   3378.00
-## 55          5     Income   5114.00
-## 56          6     Income   4884.00
-## 57          7     Income   5348.00
-## 58          8     Income   4809.00
-## 59          9     Income   4815.00
-## 60         10     Income   4091.00
-## 61         11     Income   4963.00
-## 62         12     Income   4119.00
-## 63         13     Income   5107.00
-## 64         14     Income   4458.00
-## 65         15     Income   4628.00
-## 66         16     Income   4669.00
-## 67         17     Income   3712.00
-## 68         18     Income   3545.00
-## 69         19     Income   3694.00
-## 70         20     Income   5299.00
-## 71         21     Income   4755.00
-## 72         22     Income   4751.00
-## 73         23     Income   4675.00
-## 74         24     Income   3098.00
-## 75         25     Income   4254.00
-## 76         26     Income   4347.00
-## 77         27     Income   4508.00
-## 78         28     Income   5149.00
-## 79         29     Income   4281.00
-## 80         30     Income   5237.00
-## 81         31     Income   3601.00
-## 82         32     Income   4903.00
-## 83         33     Income   3875.00
-## 84         34     Income   5087.00
-## 85         35     Income   4561.00
-## 86         36     Income   3983.00
-## 87         37     Income   4660.00
-## 88         38     Income   4449.00
-## 89         39     Income   4558.00
-## 90         40     Income   3635.00
-## 91         41     Income   4167.00
-## 92         42     Income   3821.00
-## 93         43     Income   4188.00
-## 94         44     Income   4022.00
-## 95         45     Income   3907.00
-## 96         46     Income   4701.00
-## 97         47     Income   4864.00
-## 98         48     Income   3617.00
-## 99         49     Income   4468.00
-## 100        50     Income   4566.00
-## 101         1 Illiteracy      2.10
-## 102         2 Illiteracy      1.50
-## 103         3 Illiteracy      1.80
-## 104         4 Illiteracy      1.90
-## 105         5 Illiteracy      1.10
-## 106         6 Illiteracy      0.70
-## 107         7 Illiteracy      1.10
-## 108         8 Illiteracy      0.90
-## 109         9 Illiteracy      1.30
-## 110        10 Illiteracy      2.00
-## 111        11 Illiteracy      1.90
-## 112        12 Illiteracy      0.60
-## 113        13 Illiteracy      0.90
-## 114        14 Illiteracy      0.70
-## 115        15 Illiteracy      0.50
-## 116        16 Illiteracy      0.60
-## 117        17 Illiteracy      1.60
-## 118        18 Illiteracy      2.80
-## 119        19 Illiteracy      0.70
-## 120        20 Illiteracy      0.90
-## 121        21 Illiteracy      1.10
-## 122        22 Illiteracy      0.90
-## 123        23 Illiteracy      0.60
-## 124        24 Illiteracy      2.40
-## 125        25 Illiteracy      0.80
-## 126        26 Illiteracy      0.60
-## 127        27 Illiteracy      0.60
-## 128        28 Illiteracy      0.50
-## 129        29 Illiteracy      0.70
-## 130        30 Illiteracy      1.10
-## 131        31 Illiteracy      2.20
-## 132        32 Illiteracy      1.40
-## 133        33 Illiteracy      1.80
-## 134        34 Illiteracy      0.80
-## 135        35 Illiteracy      0.80
-## 136        36 Illiteracy      1.10
-## 137        37 Illiteracy      0.60
-## 138        38 Illiteracy      1.00
-## 139        39 Illiteracy      1.30
-## 140        40 Illiteracy      2.30
-## 141        41 Illiteracy      0.50
-## 142        42 Illiteracy      1.70
-## 143        43 Illiteracy      2.20
-## 144        44 Illiteracy      0.60
-## 145        45 Illiteracy      0.60
-## 146        46 Illiteracy      1.40
-## 147        47 Illiteracy      0.60
-## 148        48 Illiteracy      1.40
-## 149        49 Illiteracy      0.70
-## 150        50 Illiteracy      0.60
-## 151         1   Life.Exp     69.05
-## 152         2   Life.Exp     69.31
-## 153         3   Life.Exp     70.55
-## 154         4   Life.Exp     70.66
-## 155         5   Life.Exp     71.71
-## 156         6   Life.Exp     72.06
-## 157         7   Life.Exp     72.48
-## 158         8   Life.Exp     70.06
-## 159         9   Life.Exp     70.66
-## 160        10   Life.Exp     68.54
-## 161        11   Life.Exp     73.60
-## 162        12   Life.Exp     71.87
-## 163        13   Life.Exp     70.14
-## 164        14   Life.Exp     70.88
-## 165        15   Life.Exp     72.56
-## 166        16   Life.Exp     72.58
-## 167        17   Life.Exp     70.10
-## 168        18   Life.Exp     68.76
-## 169        19   Life.Exp     70.39
-## 170        20   Life.Exp     70.22
-## 171        21   Life.Exp     71.83
-## 172        22   Life.Exp     70.63
-## 173        23   Life.Exp     72.96
-## 174        24   Life.Exp     68.09
-## 175        25   Life.Exp     70.69
-## 176        26   Life.Exp     70.56
-## 177        27   Life.Exp     72.60
-## 178        28   Life.Exp     69.03
-## 179        29   Life.Exp     71.23
-## 180        30   Life.Exp     70.93
-## 181        31   Life.Exp     70.32
-## 182        32   Life.Exp     70.55
-## 183        33   Life.Exp     69.21
-## 184        34   Life.Exp     72.78
-## 185        35   Life.Exp     70.82
-## 186        36   Life.Exp     71.42
-## 187        37   Life.Exp     72.13
-## 188        38   Life.Exp     70.43
-## 189        39   Life.Exp     71.90
-## 190        40   Life.Exp     67.96
-## 191        41   Life.Exp     72.08
-## 192        42   Life.Exp     70.11
-## 193        43   Life.Exp     70.90
-## 194        44   Life.Exp     72.90
-## 195        45   Life.Exp     71.64
-## 196        46   Life.Exp     70.08
-## 197        47   Life.Exp     71.72
-## 198        48   Life.Exp     69.48
-## 199        49   Life.Exp     72.48
-## 200        50   Life.Exp     70.29
-## 201         1     Murder     15.10
-## 202         2     Murder     11.30
-## 203         3     Murder      7.80
-## 204         4     Murder     10.10
-## 205         5     Murder     10.30
-## 206         6     Murder      6.80
-## 207         7     Murder      3.10
-## 208         8     Murder      6.20
-## 209         9     Murder     10.70
-## 210        10     Murder     13.90
-## 211        11     Murder      6.20
-## 212        12     Murder      5.30
-## 213        13     Murder     10.30
-## 214        14     Murder      7.10
-## 215        15     Murder      2.30
-## 216        16     Murder      4.50
-## 217        17     Murder     10.60
-## 218        18     Murder     13.20
-## 219        19     Murder      2.70
-## 220        20     Murder      8.50
-## 221        21     Murder      3.30
-## 222        22     Murder     11.10
-## 223        23     Murder      2.30
-## 224        24     Murder     12.50
-## 225        25     Murder      9.30
-## 226        26     Murder      5.00
-## 227        27     Murder      2.90
-## 228        28     Murder     11.50
-## 229        29     Murder      3.30
-## 230        30     Murder      5.20
-## 231        31     Murder      9.70
-## 232        32     Murder     10.90
-## 233        33     Murder     11.10
-## 234        34     Murder      1.40
-## 235        35     Murder      7.40
-## 236        36     Murder      6.40
-## 237        37     Murder      4.20
-## 238        38     Murder      6.10
-## 239        39     Murder      2.40
-## 240        40     Murder     11.60
-## 241        41     Murder      1.70
-## 242        42     Murder     11.00
-## 243        43     Murder     12.20
-## 244        44     Murder      4.50
-## 245        45     Murder      5.50
-## 246        46     Murder      9.50
-## 247        47     Murder      4.30
-## 248        48     Murder      6.70
-## 249        49     Murder      3.00
-## 250        50     Murder      6.90
-## 251         1    HS.Grad     41.30
-## 252         2    HS.Grad     66.70
-## 253         3    HS.Grad     58.10
-## 254         4    HS.Grad     39.90
-## 255         5    HS.Grad     62.60
-## 256         6    HS.Grad     63.90
-## 257         7    HS.Grad     56.00
-## 258         8    HS.Grad     54.60
-## 259         9    HS.Grad     52.60
-## 260        10    HS.Grad     40.60
-## 261        11    HS.Grad     61.90
-## 262        12    HS.Grad     59.50
-## 263        13    HS.Grad     52.60
-## 264        14    HS.Grad     52.90
-## 265        15    HS.Grad     59.00
-## 266        16    HS.Grad     59.90
-## 267        17    HS.Grad     38.50
-## 268        18    HS.Grad     42.20
-## 269        19    HS.Grad     54.70
-## 270        20    HS.Grad     52.30
-## 271        21    HS.Grad     58.50
-## 272        22    HS.Grad     52.80
-## 273        23    HS.Grad     57.60
-## 274        24    HS.Grad     41.00
-## 275        25    HS.Grad     48.80
-## 276        26    HS.Grad     59.20
-## 277        27    HS.Grad     59.30
-## 278        28    HS.Grad     65.20
-## 279        29    HS.Grad     57.60
-## 280        30    HS.Grad     52.50
-## 281        31    HS.Grad     55.20
-## 282        32    HS.Grad     52.70
-## 283        33    HS.Grad     38.50
-## 284        34    HS.Grad     50.30
-## 285        35    HS.Grad     53.20
-## 286        36    HS.Grad     51.60
-## 287        37    HS.Grad     60.00
-## 288        38    HS.Grad     50.20
-## 289        39    HS.Grad     46.40
-## 290        40    HS.Grad     37.80
-## 291        41    HS.Grad     53.30
-## 292        42    HS.Grad     41.80
-## 293        43    HS.Grad     47.40
-## 294        44    HS.Grad     67.30
-## 295        45    HS.Grad     57.10
-## 296        46    HS.Grad     47.80
-## 297        47    HS.Grad     63.50
-## 298        48    HS.Grad     41.60
-## 299        49    HS.Grad     54.50
-## 300        50    HS.Grad     62.90
-## 301         1      Frost     20.00
-## 302         2      Frost    152.00
-## 303         3      Frost     15.00
-## 304         4      Frost     65.00
-## 305         5      Frost     20.00
-## 306         6      Frost    166.00
-## 307         7      Frost    139.00
-## 308         8      Frost    103.00
-## 309         9      Frost     11.00
-## 310        10      Frost     60.00
-## 311        11      Frost      0.00
-## 312        12      Frost    126.00
-## 313        13      Frost    127.00
-## 314        14      Frost    122.00
-## 315        15      Frost    140.00
-## 316        16      Frost    114.00
-## 317        17      Frost     95.00
-## 318        18      Frost     12.00
-## 319        19      Frost    161.00
-## 320        20      Frost    101.00
-## 321        21      Frost    103.00
-## 322        22      Frost    125.00
-## 323        23      Frost    160.00
-## 324        24      Frost     50.00
-## 325        25      Frost    108.00
-## 326        26      Frost    155.00
-## 327        27      Frost    139.00
-## 328        28      Frost    188.00
-## 329        29      Frost    174.00
-## 330        30      Frost    115.00
-## 331        31      Frost    120.00
-## 332        32      Frost     82.00
-## 333        33      Frost     80.00
-## 334        34      Frost    186.00
-## 335        35      Frost    124.00
-## 336        36      Frost     82.00
-## 337        37      Frost     44.00
-## 338        38      Frost    126.00
-## 339        39      Frost    127.00
-## 340        40      Frost     65.00
-## 341        41      Frost    172.00
-## 342        42      Frost     70.00
-## 343        43      Frost     35.00
-## 344        44      Frost    137.00
-## 345        45      Frost    168.00
-## 346        46      Frost     85.00
-## 347        47      Frost     32.00
-## 348        48      Frost    100.00
-## 349        49      Frost    149.00
-## 350        50      Frost    173.00
-## 351         1       Area  50708.00
-## 352         2       Area 566432.00
-## 353         3       Area 113417.00
-## 354         4       Area  51945.00
-## 355         5       Area 156361.00
-## 356         6       Area 103766.00
-## 357         7       Area   4862.00
-## 358         8       Area   1982.00
-## 359         9       Area  54090.00
-## 360        10       Area  58073.00
-## 361        11       Area   6425.00
-## 362        12       Area  82677.00
-## 363        13       Area  55748.00
-## 364        14       Area  36097.00
-## 365        15       Area  55941.00
-## 366        16       Area  81787.00
-## 367        17       Area  39650.00
-## 368        18       Area  44930.00
-## 369        19       Area  30920.00
-## 370        20       Area   9891.00
-## 371        21       Area   7826.00
-## 372        22       Area  56817.00
-## 373        23       Area  79289.00
-## 374        24       Area  47296.00
-## 375        25       Area  68995.00
-## 376        26       Area 145587.00
-## 377        27       Area  76483.00
-## 378        28       Area 109889.00
-## 379        29       Area   9027.00
-## 380        30       Area   7521.00
-## 381        31       Area 121412.00
-## 382        32       Area  47831.00
-## 383        33       Area  48798.00
-## 384        34       Area  69273.00
-## 385        35       Area  40975.00
-## 386        36       Area  68782.00
-## 387        37       Area  96184.00
-## 388        38       Area  44966.00
-## 389        39       Area   1049.00
-## 390        40       Area  30225.00
-## 391        41       Area  75955.00
-## 392        42       Area  41328.00
-## 393        43       Area 262134.00
-## 394        44       Area  82096.00
-## 395        45       Area   9267.00
-## 396        46       Area  39780.00
-## 397        47       Area  66570.00
-## 398        48       Area  24070.00
-## 399        49       Area  54464.00
-## 400        50       Area  97203.00
+##   SubjectID   variable    value
+## 1         1 Population  3615.00
+## 2         1     Income  3624.00
+## 3         1 Illiteracy     2.10
+## 4         1   Life.Exp    69.05
+## 5         1     Murder    15.10
+## 6         1    HS.Grad    41.30
+## 7         1      Frost    20.00
+## 8         1       Area 50708.00
 ```
-
 ---
 class: inverse, middle, center
 
-# Using xaringan
+# Why Change Formats?
 
 ---
 
-# xaringan
+# Software Analysis
 
-Provides an R Markdown output format `xaringan::moon_reader` as a wrapper for remark.js, and you can use it in the YAML metadata, e.g.
+Packages like EZANOVA or even the summary_aov function in R require that the data be set up in certain ways prior to analyzing
 
-```yaml
----
-title: "A Cool Presentation"
-output:
-  xaringan::moon_reader:
-    yolo: true
-    nature:
-      autoplay: 30000
----
-```
-
-See the help page `?xaringan::moon_reader` for all possible options that you can use.
-
----
-
-# remark.js vs xaringan
-
-Some differences between using remark.js (left) and using **xaringan** (right):
 
 .pull-left[
-1. Start with a boilerplate HTML file;
+EZANOVA
+1. Requires Data to be in "Long" Format;
 
-1. Plain Markdown;
+1. Will still run on Wide Format but gives incorrect Results;
 
-1. Write JavaScript to autoplay slides;
+1. Does not give an input data error;
 
-1. Manually configure MathJax;
-
-1. Highlight code with `*`;
-
-1. Edit Markdown source and refresh browser to see updated slides;
 ]
 
 .pull-right[
-1. Start with an R Markdown document;
+Summary_AOV
+1. Requires Data to be in "Long" Format;
 
-1. R Markdown (can embed R/other code chunks);
+1. Will still run on Wide Format but gives incorrect Results;
 
-1. Provide an option `autoplay`;
-
-1. MathJax just works;&lt;sup&gt;*&lt;/sup&gt;
-
-1. Highlight code with `{{}}`;
-
-1. The RStudio addin "Infinite Moon Reader" automatically refreshes slides on changes;
+1. Does not give an input data error;
 ]
 
-.footnote[[*] Not really. See next page.]
-
+.footnote[ Both require long format, which really is the standard between subjects format if you think about it.]
 ---
+
+class: center, top
+
+background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTV0BswSVTJNlUv4Wugt-nw1-YF8zDThdDYRqWyphBAaiIRRijM3bZT4DFw)
+
+# Questions?
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
+"theme": "night",
 "highlightStyle": "github",
 "highlightLines": true,
 "countIncrementalSlides": false
