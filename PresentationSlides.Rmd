@@ -7,7 +7,7 @@ output:
   xaringan::moon_reader:
     lib_dir: libs
     nature:
-      theme: night
+      theme: blood
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
@@ -36,7 +36,7 @@ output:
 
 --
 
-- Long Format --> Each individual measure is contained per row, with the same subject appearing in multiple rows
+- Long Format --> Each individual measure is contained per column, with the same subject appearing in multiple rows
 
 ---
 
@@ -196,21 +196,21 @@ Packages like EZANOVA or even the summary_aov function in R require that the dat
 
 .pull-left[
 EZANOVA
-1. Requires Data to be in "Long" Format;
+1. Requires Data to be in "Long" Format
 
-1. Will still run on Wide Format but gives incorrect Results;
+1. Will still run on Wide Format but gives incorrect Results
 
-1. Does not give an input data error;
+1. Does not give an input data error
 
 ]
 
 .pull-right[
 Summary_AOV
-1. Requires Data to be in "Long" Format;
+1. Requires Data to be in "Long" Format
 
-1. Will still run on Wide Format but gives incorrect Results;
+1. Will still run on Wide Format but gives incorrect Results
 
-1. Does not give an input data error;
+1. Does not give an input data error
 ]
 
 .footnote[ It really is important to understand what data input is needed prior to pushing data through the programs.]
